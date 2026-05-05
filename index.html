@@ -4,114 +4,144 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>deobfuscation blog</title>
+        
+        <!-- Theme check script (prevents flashing) -->
+        <script>
+            (function() {
+                const theme = localStorage.getItem('theme') || 'dark';
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            })();
+        </script>
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
         
         <style>
             :root {
-                --bg-color: #ffffff;
-                --text-color: #1a1a1a;
-                --accent-color: #6d28d9;
-                --secondary-text: #666666;
-                --border-color: #eeeeee;
-                --transition-speed: 0.3s;
+                --bg-color: #f8fafc;
+                --card-bg: #ffffff;
+                --text-color: #334155;
+                --accent-color: #0ea5e9; /* vibrant sky blue */
+                --secondary-text: #64748b;
+                --border-color: #e2e8f0;
+                --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                --transition-speed: 0.2s;
             }
 
             [data-theme="dark"] {
-                --bg-color: #050505; /* Deep black for OLED */
-                --text-color: #e5e5e5;
-                --accent-color: #a855f7; /* High contrast purple */
-                --secondary-text: #a1a1aa;
-                --border-color: #1f1f23;
+                --bg-color: #121212; /* softened black */
+                --card-bg: #1e1e1e;
+                --text-color: #e2e8f0;
+                --accent-color: #38bdf8; /* brighter sky blue for dark mode */
+                --secondary-text: #94a3b8;
+                --border-color: #2d2d2d;
+                --hover-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
             }
 
             * {
                 box-sizing: border-box;
                 margin: 0;
                 padding: 0;
+                text-transform: lowercase; /* global lowercase aesthetic */
             }
 
             body {
                 background-color: var(--bg-color);
                 color: var(--text-color);
                 font-family: 'Montserrat', sans-serif;
-                line-height: 1.6;
-                transition: background-color var(--transition-speed), color var(--transition-speed);
+                line-height: 1.5;
+                transition: background-color var(--transition-speed);
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: 2rem 1rem;
+                padding: 3rem 1.5rem;
             }
 
             .container {
                 width: 100%;
-                max-width: 650px;
+                max-width: 580px; /* more compact */
             }
 
             header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 4rem;
-                border-bottom: 1px solid var(--border-color);
-                padding-bottom: 1rem;
+                margin-bottom: 3rem;
             }
 
             h1 {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
                 font-weight: 600;
-                letter-spacing: -0.02em;
+                letter-spacing: -0.01em;
             }
 
             #theme-toggle {
-                background: none;
+                background: var(--card-bg);
                 border: 1px solid var(--border-color);
                 color: var(--text-color);
                 padding: 0.4rem 0.8rem;
                 cursor: pointer;
                 font-family: inherit;
-                font-size: 0.8rem;
-                border-radius: 4px;
-                transition: border-color var(--transition-speed);
+                font-size: 0.75rem;
+                border-radius: 6px;
+                transition: all var(--transition-speed);
             }
 
             #theme-toggle:hover {
                 border-color: var(--accent-color);
+                color: var(--accent-color);
+            }
+
+            .blog-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 1.25rem;
             }
 
             .blog-entry {
-                margin-bottom: 3rem;
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                padding: 1.5rem;
+                border-radius: 10px;
+                text-decoration: none;
+                color: inherit;
+                display: block;
+                transition: transform var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed);
+            }
+
+            .blog-entry:hover {
+                transform: translateY(-2px);
+                border-color: var(--accent-color);
+                box-shadow: var(--hover-shadow);
             }
 
             .entry-date {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
                 color: var(--secondary-text);
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
                 margin-bottom: 0.5rem;
-            }
-
-            .entry-title {
-                font-size: 1.5rem;
-                font-weight: 600;
-                margin-bottom: 0.75rem;
-                color: var(--accent-color);
-                text-decoration: none;
                 display: block;
-            }
-
-            .entry-excerpt {
-                font-size: 0.95rem;
-                color: var(--secondary-text);
                 font-weight: 300;
             }
 
-            footer {
-                margin-top: 4rem;
-                font-size: 0.8rem;
+            .entry-title {
+                font-size: 1.15rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: var(--text-color);
+                transition: color var(--transition-speed);
+            }
+
+            .blog-entry:hover .entry-title {
+                color: var(--accent-color);
+            }
+
+            .entry-excerpt {
+                font-size: 0.85rem;
                 color: var(--secondary-text);
-                text-align: center;
+                font-weight: 400;
             }
         </style>
     </head>
@@ -119,75 +149,63 @@
     <body>
         <div class="container">
             <header>
-                <h1>deobfuscation log</h1>
-                <button id="theme-toggle" aria-label="Toggle dark mode">toggle theme</button>
+                <h1>deobfuscation blog</h1>
+                <button id="theme-toggle">toggle theme</button>
             </header>
 
-            <main id="blog-posts">
-                <!-- Posts will be injected here via JavaScript -->
+            <main id="blog-posts" class="blog-grid">
+                <!-- posts injected via js -->
             </main>
-
-            <footer>
-                <p>&copy; 2026 / modular deobfuscation blog</p>
-            </footer>
         </div>
 
         <script>
-            // Modular Blog Entries
+            // modular entries
             const blogData = [
                 {
-                    title: "Analyzing Control Flow Flattening in Luau",
-                    date: "May 05, 2026",
-                    excerpt: "A deep dive into reconstructing the original switch-case logic from heavily mutated bytecode structures.",
+                    title: "analyzing control flow flattening",
+                    date: "may 05, 2026",
+                    excerpt: "reconstructing switch-case logic from mutated bytecode structures.",
                     link: "#"
                 },
                 {
-                    title: "Automating Constant Decryption",
-                    date: "April 28, 2026",
-                    excerpt: "Using static analysis to extract and decrypt string pools protected by XOR-based dynamic keys.",
+                    title: "automating constant decryption",
+                    date: "april 28, 2026",
+                    excerpt: "extracting string pools protected by xor-based dynamic keys.",
                     link: "#"
                 },
                 {
-                    title: "The Role of Upvalues in Script Reconstruction",
-                    date: "April 15, 2026",
-                    excerpt: "Understanding how closure state can be used to map out the function hierarchy of an obfuscated script.",
+                    title: "the role of upvalues",
+                    date: "april 15, 2026",
+                    excerpt: "mapping function hierarchy through closure state analysis.",
                     link: "#"
                 }
             ];
 
             const postsContainer = document.getElementById('blog-posts');
 
-            // Render Function
             function renderPosts() {
                 postsContainer.innerHTML = blogData.map(post => `
-                    <article class="blog-entry">
-                        <div class="entry-date">${post.date}</div>
-                        <a href="${post.link}" class="entry-title">${post.title}</a>
+                    <a href="${post.link}" class="blog-entry">
+                        <span class="entry-date">${post.date}</span>
+                        <div class="entry-title">${post.title}</div>
                         <p class="entry-excerpt">${post.excerpt}</p>
-                    </article>
+                    </a>
                 `).join('');
             }
 
-            // Theme Toggle Logic
             const toggleBtn = document.getElementById('theme-toggle');
-            const currentTheme = localStorage.getItem('theme') || 'dark';
-
-            if (currentTheme === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
-            }
 
             toggleBtn.addEventListener('click', () => {
-                let theme = document.body.getAttribute('data-theme');
-                if (theme === 'dark') {
-                    document.body.removeAttribute('data-theme');
+                const isDark = document.documentElement.hasAttribute('data-theme');
+                if (isDark) {
+                    document.documentElement.removeAttribute('data-theme');
                     localStorage.setItem('theme', 'light');
                 } else {
-                    document.body.setAttribute('data-theme', 'dark');
+                    document.documentElement.setAttribute('data-theme', 'dark');
                     localStorage.setItem('theme', 'dark');
                 }
             });
 
-            // Initialize
             renderPosts();
         </script>
     </body>
