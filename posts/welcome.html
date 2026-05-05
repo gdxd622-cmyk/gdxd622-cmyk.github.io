@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>welcome to the blog - deobfuscation blog</title>
+        
+        <!-- global theme sync -->
+        <script>
+            (function() {
+                const theme = localStorage.getItem('theme') || 'dark';
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            })();
+        </script>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+        
+        <style>
+            :root {
+                --bg-color: #f8fafc;
+                --card-bg: #ffffff;
+                --text-color: #334155;
+                --accent-color: #0ea5e9;
+                --secondary-text: #64748b;
+                --border-color: #e2e8f0;
+                --code-bg: #f1f5f9;
+                --transition-speed: 0.2s;
+                
+                /* syntax highlighting - light */
+                --syn-keyword: #0284c7;
+                --syn-string: #059669;
+                --syn-comment: #94a3b8;
+                --syn-func: #7c3aed;
+            }
+
+            [data-theme="dark"] {
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-color: #e2e8f0;
+                --accent-color: #38bdf8;
+                --secondary-text: #94a3b8;
+                --border-color: #2d2d2d;
+                --code-bg: #161616;
+                
+                /* syntax highlighting - dark */
+                --syn-keyword: #7dd3fc;
+                --syn-string: #34d399;
+                --syn-comment: #64748b;
+                --syn-func: #c084fc;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                text-transform: lowercase;
+            }
+
+            body {
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                font-family: 'Montserrat', sans-serif;
+                line-height: 1.7;
+                transition: background-color var(--transition-speed);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 3rem 1.5rem;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 580px;
+            }
+
+            /* header styles */
+            header {
+                margin-bottom: 4rem;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 2rem;
+            }
+
+            .nav-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0.5rem;
+            }
+
+            .site-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                text-decoration: none;
+                color: var(--text-color);
+            }
+
+            .post-subtitle {
+                font-size: 0.85rem;
+                color: var(--accent-color);
+                font-weight: 400;
+                display: block;
+            }
+
+            #theme-toggle {
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                color: var(--text-color);
+                padding: 0.4rem 0.8rem;
+                cursor: pointer;
+                font-family: inherit;
+                font-size: 0.75rem;
+                border-radius: 6px;
+                transition: all var(--transition-speed);
+            }
+
+            #theme-toggle:hover {
+                border-color: var(--accent-color);
+                color: var(--accent-color);
+            }
+
+            /* typography & content */
+            article h2 {
+                font-size: 1.4rem;
+                margin: 2rem 0 1rem;
+                color: var(--text-color);
+            }
+
+            article p {
+                margin-bottom: 1.5rem;
+                font-size: 0.95rem;
+                font-weight: 400;
+                color: var(--secondary-text);
+            }
+
+            article ul {
+                margin: 0 0 1.5rem 1.5rem;
+                color: var(--secondary-text);
+                font-size: 0.9rem;
+            }
+
+            article li { margin-bottom: 0.5rem; }
+
+            blockquote {
+                border-left: 3px solid var(--accent-color);
+                padding-left: 1.5rem;
+                margin: 2rem 0;
+                font-style: italic;
+                color: var(--text-color);
+            }
+
+            /* code block styling */
+            pre {
+                background: var(--code-bg);
+                border: 1px solid var(--border-color);
+                padding: 1.5rem;
+                border-radius: 10px;
+                overflow-x: auto;
+                margin: 2rem 0;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.85rem;
+                text-transform: none; /* keep code case sensitive */
+            }
+
+            code { font-family: inherit; }
+
+            /* simple manual syntax highlighting classes */
+            .kw { color: var(--syn-keyword); font-weight: 600; } /* keyword */
+            .st { color: var(--syn-string); } /* string */
+            .cm { color: var(--syn-comment); } /* comment */
+            .fn { color: var(--syn-func); } /* function */
+
+            .back-link {
+                display: inline-block;
+                margin-top: 3rem;
+                text-decoration: none;
+                color: var(--accent-color);
+                font-size: 0.8rem;
+                border-bottom: 1px solid transparent;
+            }
+
+            .back-link:hover { border-bottom: 1px solid var(--accent-color); }
+
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <div class="nav-top">
+                    <a href="index.html" class="site-title">deobfuscation blog</a>
+                    <buttonThis is the layout for your individual post pages. It keeps the header and toggle logic from the index but adds the post-specific subtitle and a custom-built Lua syntax highlighter. 
+
+To ensure the theme is **global**, the script in the `<head>` checks `localStorage` immediately. As long as your pages are on the same domain (e.g., `tragic.wtf`), the theme will persist across all of them.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>welcome to the blog | deobfuscation blog</title>
+        
+        <!-- global theme persistence -->
+        <script>
+            (function() {
+                const theme = localStorage.getItem('theme') || 'dark';
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            })();
+        </script>
+
+        <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+        <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+        <link href="[https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap](https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap)" rel="stylesheet">
+        
+        <style>
+            :root {
+                --bg-color: #f8fafc;
+                --card-bg: #ffffff;
+                --text-color: #334155;
+                --accent-color: #0ea5e9;
+                --secondary-text: #64748b;
+                --border-color: #e2e8f0;
+                --code-bg: #f1f5f9;
+                
+                /* syntax highlighting - light */
+                --token-keyword: #be185d;
+                --token-string: #059669;
+                --token-comment: #94a3b8;
+                --token-function: #0ea5e9;
+                --token-number: #d97706;
+
+                --transition-speed: 0.2s;
+            }
+
+            [data-theme="dark"] {
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-color: #e2e8f0;
+                --accent-color: #38bdf8;
+                --secondary-text: #94a3b8;
+                --border-color: #2d2d2d;
+                --code-bg: #151515;
+
+                /* syntax highlighting - dark */
+                --token-keyword: #f472b6;
+                --token-string: #34d399;
+                --token-comment: #4b5563;
+                --token-function: #38bdf8;
+                --token-number: #fbbf24;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                text-transform: lowercase;
+            }
+
+            body {
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                font-family: 'Montserrat', sans-serif;
+                line-height: 1.7;
+                transition: background-color var(--transition-speed);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 3rem 1.5rem;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 680px;
+            }
+
+            /* header styling */
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 4rem;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 1.5rem;
+            }
+
+            .brand-section h1 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--text-color);
+            }
+
+            .brand-section .subtitle {
+                font-size: 0.85rem;
+                color: var(--accent-color);
+                font-weight: 400;
+                margin-top: 0.2rem;
+            }
+
+            #theme-toggle {
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                color: var(--text-color);
+                padding: 0.4rem 0.8rem;
+                cursor: pointer;
+                font-family: inherit;
+                font-size: 0.75rem;
+                border-radius: 6px;
+                transition: all var(--transition-speed);
+            }
+
+            #theme-toggle:hover {
+                border-color: var(--accent-color);
+                color: var(--accent-color);
+            }
+
+            /* post content */
+            article h2 {
+                font-size: 1.5rem;
+                margin: 2rem 0 1rem 0;
+                color: var(--text-color);
+            }
+
+            article p {
+                margin-bottom: 1.5rem;
+                font-size: 0.95rem;
+                color: var(--text-color);
+                font-weight: 400;
+            }
+
+            article ul {
+                margin-bottom: 1.5rem;
+                padding-left: 1.2rem;
+            }
+
+            article li {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+                color: var(--secondary-text);
+            }
+
+            /* code block styling */
+            pre {
+                background: var(--code-bg);
+                padding: 1.5rem;
+                border-radius: 10px;
+                overflow-x: auto;
+                margin: 2rem 0;
+                border: 1px solid var(--border-color);
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.85rem;
+                text-transform: none; /* keep code case sensitive */
+            }
+
+            code {
+                font-family: 'JetBrains Mono', monospace;
+                text-transform: none;
+            }
+
+            /* syntax highlighting classes */
+            .t-kw { color: var(--token-keyword); font-weight: 600; }
+            .t-st { color: var(--token-string); }
+            .t-cm { color: var(--token-comment); font-style: italic; }
+            .t-fn { color: var(--token-function); }
+            .t-nm { color: var(--token-number); }
+
+            .back-link {
+                display: inline-block;
+                margin-top: 3rem;
+                text-decoration: none;
+                color: var(--secondary-text);
+                font-size: 0.8rem;
+                transition: color var(--transition-speed);
+            }
+
+            .back-link:hover {
+                color: var(--accent-color);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <div class="brand-section">
+                    <h1>deobfuscation blog</h1>
+                    <div class="subtitle">welcome to the blog</div>
+                </div>
+                <button id="theme-toggle">toggle theme</button>
+            </header>
+
+            <main>
+                <article>
+                    <p>this space is dedicated to the technical side of script analysis, specifically focused on luau and vm-based protection methods. i've spent a lot of time poking at how bytecode is mutated and hidden, so i figured it was time to actually document the process.</p>
+                    
+                    <h2>what to expect</h2>
+                    <p>i'll be posting deep dives into various techniques, ranging from simple constant decryption to full-scale control flow reconstruction. the goal is to keep things minimal and modular—exactly like this site.</p>
+                    
+                    <ul>
+                        <li>bytecode analysis & lifting</li>
+                        <li>handling custom vm instructions</li>
+                        <li>identifying and stripping junk code</li>
+                        <li>automating the tedious parts of deobfuscation</li>
+                    </ul>
+
+                    <h2>a quick example</h2>
+                    <p>here is a look at a basic setup for hooking methods while maintaining proper closure status using generalized iteration, which is much cleaner for the modern environments i work in.</p>
+
+<pre><code><span class="t-cm">-- basic environment utility</span>
+<span class="t-kw">local</span> function <span class="t-fn">secure_hook</span>(target, callback)
+    <span class="t-kw">for</span> key, value <span class="t-kw">in</span> target <span class="t-kw">do</span>
+        <span class="t-kw">if</span> <span class="t-fn">type</span>(value) == <span class="t-st">"function"</span> <span class="t-kw">then</span>
+            target[key] = <span class="t-fn">newcclosure</span>(<span class="t-kw">function</span>(...)
+                <span class="t-fn">print</span>(<span class="t-st">"calling: "</span> .. key)
+                <span class="t-kw">return</span> <span class="t-fn">callback</span>(value, ...)
+            <span class="t-kw">end</span>)
+        <span class="t-kw">end</span>
+    <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-fn">secure_hook</span>(game_mt, <span class="t-kw">function</span>(original, ...)
+    <span class="t-kw">return</span> <span class="t-fn">original</span>(...)
+<span class="t-kw">end</span>)</code></pre>
+
+                    <p>more to come soon. stay tuned for a breakdown of control flow flattening in the next entry.</p>
+                </article>
+
+                <a href="index.html" class="back-link">← return to home</a>
+            </main>
+        </div>
+
+        <script>
+            // global theme toggle logic
+            const toggleBtn = document.getElementById('theme-toggle');
+
+            toggleBtn.addEventListener('click', () => {
+                const isDark = document.documentElement.hasAttribute('data-theme');
+                if (isDark) {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        </script>
+    </body>
+</html>
